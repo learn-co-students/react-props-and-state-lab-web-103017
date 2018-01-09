@@ -19,6 +19,7 @@ class App extends React.Component {
   onChangeType = (changeType) => {
     this.setState({
       filters: {
+        //this.setState merges outer most keys, does not handle nested keys
         ...this.state.filters,
         type: changeType
       }
@@ -29,14 +30,13 @@ class App extends React.Component {
     if (this.state.filters.type === "all"){
       return fetch('/api/pets').then(resp => resp.json()).then(output => {
         this.setState({
-          ...this.state,
+          //this.setState merges outer most keys, does not handle nested keys
           pets: [...output]
         })
       })
     }else {
       return fetch(`/api/pets?type=${this.state.filters.type}`).then(resp => resp.json()).then(output => {
         this.setState({
-          ...this.state,
           pets: [...output]
         })
       })
@@ -45,7 +45,7 @@ class App extends React.Component {
 
   onAdoptPet = (id) => {
     this.setState({
-      ...this.state,
+      //this.setState merges outer most keys, does not handle nested keys      
       adoptedPets: [id]
     })
   }
