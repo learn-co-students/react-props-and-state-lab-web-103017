@@ -2,12 +2,14 @@ import React from 'react';
 
 import Filters from './Filters';
 import PetBrowser from './PetBrowser';
+// import { getAll } from "../data/pets";
 
 class App extends React.Component {
   constructor() {
     super();
 
     this.state = {
+      // pets: getAll(),
       pets: [],
       adoptedPets: [],
       filters: {
@@ -28,26 +30,27 @@ class App extends React.Component {
 
   onFindPetsClick = () => {
     if (this.state.filters.type === "all"){
-      return fetch('/api/pets').then(resp => resp.json()).then(output => {
+      return fetch('/api/pets').then(resp => resp.json()).then(pets => {
         this.setState({
           //this.setState merges outer most keys, does not handle nested keys
-          pets: [...output]
+          pets
         })
       })
     }else {
-      return fetch(`/api/pets?type=${this.state.filters.type}`).then(resp => resp.json()).then(output => {
+      return fetch(`/api/pets?type=${this.state.filters.type}`).then(resp => resp.json()).then(pets => {
         this.setState({
-          pets: [...output]
+          pets
         })
       })
     }
   }
 
   onAdoptPet = (id) => {
-    this.setState({
-      //this.setState merges outer most keys, does not handle nested keys      
-      adoptedPets: [id]
-    })
+    this.setState(prevState => {
+      //this.setState merges outer most keys, does not handle nested keys
+      return {adoptedPets: [...prevState.adoptedPets,id]}
+    }, () => {console.log(this.state.adoptedPets)}
+    )
   }
 
   render() {
@@ -62,7 +65,7 @@ class App extends React.Component {
               <Filters filters={this.state.filters} onChangeType={this.onChangeType} onFindPetsClick={this.onFindPetsClick}/>
             </div>
             <div className="twelve wide column">
-              <PetBrowser pets={this.state.pets} onAdoptPet={this.onAdoptPet} adoptedPets={this.adoptedPets}/>
+              <PetBrowser pets={this.state.pets} onAdoptPet={this.onAdoptPet} adoptedPets={this.state.adoptedPets}/>
             </div>
           </div>
         </div>
