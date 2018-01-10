@@ -3,10 +3,23 @@ import React from 'react';
 import Pet from './Pet';
 
 class PetBrowser extends React.Component {
+
+  getAvailable(id){
+
+    if (this.props.adoptedPets.includes(id)) {
+      return true
+    } else {
+      return false
+    }
+
+  }
+
+
+
   render() {
     return (
       <div className="ui cards">
-        <code>&lt;Pet /&gt;</code> &nbsp; components should go here
+        {this.props.pets.map(p => <Pet pet={p} onAdoptPet={this.props.onAdoptPet} isAdopted={this.getAvailable(p.id)} />)}
       </div>
     );
   }
